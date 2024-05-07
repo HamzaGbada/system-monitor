@@ -9,7 +9,7 @@ export class MonitorWebSocketService {
 
   constructor() {
     this.stompClient = new Client({
-      brokerURL: 'ws://localhost:8080/ws/info-topic',
+      brokerURL: 'ws://localhost:8080/ws/messages',
       reconnectDelay: 5000,
       debug: (str: string) => {
         console.log(str);
@@ -21,7 +21,7 @@ export class MonitorWebSocketService {
   // Method to subscribe to WebSocket messages
   getMessage(callback: (message: Message) => void) {
     this.stompClient.onConnect = () => {
-      this.stompClient.subscribe('/topic/info-topic', callback);
+      this.stompClient.subscribe('/ws/messages', callback);
     };
   }
 }
