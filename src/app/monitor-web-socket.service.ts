@@ -23,5 +23,9 @@ export class MonitorWebSocketService {
     this.stompClient.onConnect = () => {
       this.stompClient.subscribe('/ws/messages', callback);
     };
+    this.stompClient.onStompError = (frame) => {
+      console.error('Error connecting to WebSocket:', frame);
+      alert('Error connecting to WebSocket. Please check your connection.');
+    };
   }
 }

@@ -15,6 +15,7 @@ export class MonitorComponent implements OnInit {
   ngOnInit(): void {
     // Subscribe to WebSocket messages
     this.monitorWebSocketService.getMessage((message: Message) => {
+      console.log("message" + message)
       this.messages.push(JSON.parse(message.body));
     });
   }
