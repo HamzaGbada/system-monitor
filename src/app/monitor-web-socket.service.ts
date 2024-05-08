@@ -1,31 +1,32 @@
 import { Injectable } from '@angular/core';
-import { Client, Message } from '@stomp/stompjs';
+import {BehaviorSubject} from "rxjs";
+import {Stomp} from "@stomp/stompjs";
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class MonitorWebSocketService {
-  private stompClient: Client;
+  private stompClient: Stomp.Client;
+
+  private messageSubject = new BehaviorSubject<string>('');
 
   constructor() {
-    this.stompClient = new Client({
-      brokerURL: 'ws://localhost:8080/hello',
-      // reconnectDelay: 5000,
-      // debug: (str: string) => {
-      //   console.log(str);
-      // }
+    const socket = new SockJS('/ws');
+    this.stompClient = Stomp.over(socket);
+    this.stompClient.connect({}, (frame) => {
+      console.log(frame);
+      this.stompClient.subscribe('/all/messages', (result) => {
+        this.messageSubject.next(JSON.parse(result.body).text);
+      });
     });
-    this.stompClient.activate();
   }
 
-  // Method to subscribe to WebSocket messages
-  getMessage(callback: (message: Message) => void) {
-    this.stompClient.onConnect = () => {
-      this.stompClient.subscribe('/topic', callback);
-    };
-    this.stompClient.onStompError = (frame) => {
-      console.error('Error connecting to WebSocket:', frame);
-      alert('Error connecting to WebSocket. Please check your connection.');
-    };
+  sendMessage(text: string) {
+    this.stompClient.send("/app/application", {}, JSON.stringify({'text': text}));
+  }
+
+  getMessageSubject() {
+    return this.messageSubject.asObservable();
   }
 }
