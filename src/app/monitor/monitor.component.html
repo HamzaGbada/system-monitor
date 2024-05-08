@@ -1,7 +1,9 @@
-<div *ngFor="let message of messages">
-  {{ message | json }}
-</div>
-
 <div>
-  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  <form (submit)="sendName()">
+    <label for="name">Name:</label>
+    <input type="text" id="name" [(ngModel)]="name">
+    <button type="submit">Send</button>
+  </form>
+  <button (click)="connect()">Connect</button>
+  <button (click)="disconnect()">Disconnect</button>
 </div>

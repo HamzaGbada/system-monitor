@@ -7,32 +7,21 @@ import { MonitorWebSocketService } from '../monitor-web-socket.service';
   templateUrl: './monitor.component.html',
   styleUrls: ['./monitor.component.css']
 })
-export class MonitorComponent implements OnInit {
-  textMessage: string = '';
-  privateMessage: string = '';
-  recipient: string = '';
-  messages: string[] = [];
+export class MonitorComponent{
+  name= "aaa";
+
   constructor(private monitorWebSocketService: MonitorWebSocketService) { }
 
-  ngOnInit(): void {
-    this.monitorWebSocketService.getMessageSubject().subscribe(message => {
-      this.messages.push(message);
-    });
+  connect(): void {
+    this.monitorWebSocketService.connect();
   }
 
-  sendMessage() {
-    if (this.textMessage.trim()) {
-      this.monitorWebSocketService.sendMessage(this.textMessage);
-      this.textMessage = '';
-    }
+  disconnect(): void {
+    this.monitorWebSocketService.disconnect();
   }
 
-  sendPrivateMessage() {
-    if (this.privateMessage.trim() && this.recipient.trim()) {
-      // You need to implement the logic for sending a private message
-      console.log('Sending private message to: ' + this.recipient);
-      this.privateMessage = '';
-      this.recipient = '';
-    }
+  sendName(): void {
+    this.monitorWebSocketService.sendName(this.name);
   }
+
 }
